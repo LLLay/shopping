@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--Redis 连接池的设置-->
+    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <!--总数-->
+        <property name="maxTotal" value="${redis.pool.maxActive}" />
+        <!--最大空闲数-->
+        <property name="maxIdle" value="${redis.pool.maxIdle}" />
+        <property name="maxWaitMillis" value="${redis.pool.maxWait}" />
+        <property name="testOnBorrow" value="${redis.pool.testOnBorrow}" />
+    </bean>
+
+    <!--创建Redis连接池 并做相关配置-->
+    <bean id="jedisWritePool" class="com.tt.o2o.cache.JedisPoolWriper"
+          depends-on="jedisPoolConfig">
+        <constructor-arg index="0" ref="jedisPoolConfig" />
+        <constructor-arg index="1" value="${redis.hostname}" />
+        <constructor-arg index="2" value="${redis.port}" type="int" />
+    </bean>
+
+    <!--创建Redis工具类 封装好Redis的连接以进行相关操作-->
+    <bean id="jedisUtil" class="com.tt.o2o.cache.JedisUtil" scope="singleton">
+        <property name="jedisPool">
+            <ref bean="jedisWritePool" />
+        </property>
+    </bean>
+
+    <bean id="jedisKeys" class="com.tt.o2o.cache.JedisUtil$Keys" scope="singleton">
+        <constructor-arg ref="jedisUtil"></constructor-arg>
+    </bean>
+    <bean id="jedisStrings" class="com.tt.o2o.cache.JedisUtil$Strings"
+          scope="singleton">
+        <constructor-arg ref="jedisUtil"></constructor-arg>
+    </bean>
+    <bean id="jedisLists" class="com.tt.o2o.cache.JedisUtil$Lists"
+          scope="singleton">
+        <constructor-arg ref="jedisUtil"></constructor-arg>
+    </bean>
+    <bean id="jedisSets" class="com.tt.o2o.cache.JedisUtil$Sets"
+          scope="singleton">
+        <constructor-arg ref="jedisUtil"></constructor-arg>
+    </bean>
+    <bean id="jedisHash" class="com.tt.o2o.cache.JedisUtil$Hash"
+          scope="singleton">
+        <constructor-arg ref="jedisUtil"></constructor-arg>
+    </bean>
+
+
+</beans>
