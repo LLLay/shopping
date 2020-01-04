@@ -27,14 +27,12 @@ public class HeadLineServiceImpl implements IHeadLineService {
     @Autowired
     private JedisUtil.Keys jedisKeys;
     @Autowired
-    private CacheService cacheService;
-    @Autowired
     private IHeadLineDao headLineDao;
 
 
     @Override
     public List<HeadLine> getHeadLineList(HeadLine headLineCondition) {
-        List<HeadLine> headLineList = null;
+        /*List<HeadLine> headLineList = null;
         ObjectMapper mapper = new ObjectMapper();
         String key = HL_LIST_KEY;
         if (headLineCondition.getEnableStatus() != null) {
@@ -63,6 +61,7 @@ public class HeadLineServiceImpl implements IHeadLineService {
                 throw new RuntimeException(e.getMessage());
             }
         }
-        return headLineList;
+        return headLineList;*/
+        return headLineDao.queryHeadLine(headLineCondition);
     }
 }

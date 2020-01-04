@@ -7,6 +7,17 @@ public class PersonInfo {
 
     //用户ID
     private Long userId;
+
+    private Long localAuthId;
+
+    public Long getLocalAuthId() {
+        return localAuthId;
+    }
+
+    public void setLocalAuthId(Long localAuthId) {
+        this.localAuthId = localAuthId;
+    }
+
     //姓名
     private String name;
     //头像地址
